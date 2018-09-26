@@ -2,6 +2,8 @@
 namespace dvizh\cart\controllers;
 
 use yii\helpers\Json;
+use app\models\Product;
+use app\models\ProductSearch;
 use yii\filters\VerbFilter;
 use yii;
 
@@ -36,7 +38,7 @@ class ElementController extends \yii\web\Controller
             $json['result'] = 'fail';
         }
 
-        return $this->_cartJson($json);
+        return $this->_elemJson($json);
     }
 
     public function actionCreate()
@@ -63,14 +65,20 @@ class ElementController extends \yii\web\Controller
                 $elementModel = $cart->put($productModel, $postData['CartElement']['count'], $options);
             }
 
+            $product = $this->findModel($elementModel->item_id);
+
             $json['elementId'] = $elementModel->getId();
+            $json['elementName'] = $product->mineralData->familyData->name;
+            $json['elementPrice'] = $product->price;
+            $json['elementImg'] = $product->getMainImage();
+            $json['elementSku'] = $product->sku;
             $json['result'] = 'success';
         } else {
             $json['result'] = 'fail';
             $json['error'] = 'empty model';
         }
 
-        return $this->_cartJson($json);
+        return $this->_elemJson($json);
     }
 
     public function actionUpdate()
@@ -94,7 +102,7 @@ class ElementController extends \yii\web\Controller
         $json['elementId'] = $elementModel->getId();
         $json['result'] = 'success';
 
-        return $this->_cartJson($json);
+        return $this->_elemJson($json);
     }
 
     private function _cartJson($json)
@@ -104,7 +112,7 @@ class ElementController extends \yii\web\Controller
                 $elementsListWidgetParams = [];
             }
 
-            $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
+            // $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
             $json['count'] = $cartModel->getCount();
             $json['clear_price'] = $cartModel->getCost(false);
             $json['price'] = $cartModel->getCostFormatted();
@@ -114,6 +122,41 @@ class ElementController extends \yii\web\Controller
             $json['clear_price'] = 0;
         }
         return Json::encode($json);
+    }
+
+    private function _elemJson($json)
+    {
+        if ($cartModel = yii::$app->cart) {
+            if(!$elementsListWidgetParams = yii::$app->request->post('elementsListWidgetParams')) {
+                $elementsListWidgetParams = [];
+            }
+
+            // $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
+            // $json['count'] = $cartModel->getCount();
+            // $json['clear_price'] = $cartModel->getCost(false);
+            // $json['price'] = $cartModel->getCostFormatted();
+        } else {
+            $json['count'] = 0;
+            $json['price'] = 0;
+            $json['clear_price'] = 0;
+        }
+        return Json::encode($json);
+    }
+
+    /**
+     * Finds the Product model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Product the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Product::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
 }

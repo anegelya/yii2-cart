@@ -42,6 +42,8 @@ dvizh.cart = {
 
             dvizh.cart.addElement(itemModelName, itemId, itemCount, itemPrice, itemOptions, url);
 
+            // console.log(jQuery(self).data('price'));
+
             return false;
         });
 
@@ -225,7 +227,8 @@ dvizh.cart = {
                     console.log(json.error);
                 }
                 else {
-                    dvizh.cart.renderCart(json);
+                    // dvizh.cart.renderCart(json);
+                    dvizh.cart.renderPopUp(json);
                     $(document).trigger('dvizhCartChanged');
                 }
 
@@ -247,6 +250,27 @@ dvizh.cart = {
         jQuery('.dvizh-cart-price').html(json.price);
 
         jQuery(document).trigger("renderCart", json);
+
+        return true;
+    },
+    renderPopUp: function (json) {
+        if (!json) {
+            var json = {};
+            jQuery.post('/cart/default/info', {},
+                function (answer) {
+                    json = answer;
+                }, "json");
+        }
+
+        jQuery('#add-to-cart-popup .tile-img img').attr('src', json.elementImg);
+        jQuery('#add-to-cart-popup .tile-mineral').html(json.elementName);
+        jQuery('#add-to-cart-popup .tile-sku').html(json.elementSku);
+        jQuery('#add-to-cart-popup .tile-price').html(json.elementPrice);
+
+        jQuery('#add-to-cart-popup').addClass('visible');
+
+
+        jQuery(document).trigger("renderPopUp", json);
 
         return true;
     },
