@@ -71,7 +71,7 @@ class Cart extends Component
                 }
             }
         } else {
-            $elementModel->countIncrement($count);
+            // $elementModel->countIncrement($count);
         }
 
         // TODO DRY
@@ -108,7 +108,7 @@ class Cart extends Component
                 }
             }
         } else {
-            $elementModel->countIncrement($count);
+            // $elementModel->countIncrement($count);
         }
 
         // TODO DRY
@@ -205,6 +205,13 @@ class Cart extends Component
     {
         return $this->cart->getElementById($id);
     }
+
+
+    public function getElementByProductId($id)
+    {
+            return $this->cart->getElementByProductId($id);
+    }
+
 
     public function getCart()
     {

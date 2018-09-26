@@ -86,19 +86,19 @@ class ElementController extends \yii\web\Controller
         $json = ['result' => 'undefined', 'error' => false];
 
         $cart = yii::$app->cart;
-        
+
         $postData = yii::$app->request->post();
 
         $elementModel = $cart->getElementById($postData['CartElement']['id']);
-        
+
         if(isset($postData['CartElement']['count'])) {
             $elementModel->setCount($postData['CartElement']['count'], true);
         }
-        
+
         if(isset($postData['CartElement']['options'])) {
             $elementModel->setOptions($postData['CartElement']['options'], true);
         }
-        
+
         $json['elementId'] = $elementModel->getId();
         $json['result'] = 'success';
 
@@ -112,7 +112,7 @@ class ElementController extends \yii\web\Controller
                 $elementsListWidgetParams = [];
             }
 
-            // $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
+            $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
             $json['count'] = $cartModel->getCount();
             $json['clear_price'] = $cartModel->getCost(false);
             $json['price'] = $cartModel->getCostFormatted();
@@ -131,10 +131,10 @@ class ElementController extends \yii\web\Controller
                 $elementsListWidgetParams = [];
             }
 
-            // $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
-            // $json['count'] = $cartModel->getCount();
-            // $json['clear_price'] = $cartModel->getCost(false);
-            // $json['price'] = $cartModel->getCostFormatted();
+            $json['elementsHTML'] = \dvizh\cart\widgets\ElementsList::widget($elementsListWidgetParams);
+            $json['count'] = $cartModel->getCount();
+            $json['clear_price'] = $cartModel->getCost(false);
+            $json['price'] = $cartModel->getCostFormatted();
         } else {
             $json['count'] = 0;
             $json['price'] = 0;

@@ -53,7 +53,7 @@ dvizh.cart = {
                 url = jQuery(self).data('url');
 
             dvizh.cart.truncate(url);
-            
+
             return false;
         });
 
@@ -73,7 +73,7 @@ dvizh.cart = {
 
             return false;
         });
-        
+
         jQuery(document).on('click', '.dvizh-arr', this.changeInputValue);
         jQuery(document).on('change', '.dvizh-cart-element-before-count', this.changeBeforeElementCount);
         jQuery(document).on('change', '.dvizh-option-values-before', this.changeBeforeElementOptions);
@@ -227,7 +227,7 @@ dvizh.cart = {
                     console.log(json.error);
                 }
                 else {
-                    // dvizh.cart.renderCart(json);
+                    dvizh.cart.renderCart(json);
                     dvizh.cart.renderPopUp(json);
                     $(document).trigger('dvizhCartChanged');
                 }
@@ -279,4 +279,3 @@ dvizh.cart = {
 $(function() {
     dvizh.cart.init();
 });
-
